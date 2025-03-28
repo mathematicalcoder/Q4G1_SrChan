@@ -26,7 +26,29 @@ app.get("/", (req, res) => {
 // that came from index.hbs
 
 app.get("/happy", (req, res) => {
-  
+  res.render("happy.hbs")
+})
+
+app.post("/happy", (req, res) => {
+  const data = req.body;
+  if (!data.name || !data.gender) {
+    // give error if name or gender is missing
+    return res.status(400).send("At least one required field is missing!")
+  } else {
+    let output = "";
+    // add basic info
+    output += `name: ${data.name}<br>
+    gender: ${data.gender}<br>
+    number: ${data.number}<br>`
+    // add guest info
+    for (let i = 0; i < data.number; i++) {
+      let nameId = `name${i+1}`
+      let checkboxId = `checkbox${i+1}`
+      output += `${nameId}: ${data[nameId]}<br>
+      ${checkboxId}: ${data[checkboxId]}`
+    }
+  }
+  res.render("happy.hbs", { output: output })
 })
 
 //Makes the app listen to port 3000
